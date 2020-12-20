@@ -1,0 +1,5 @@
+all:hard_hat_workers0-hard_hat_workers4999
+train:hard_hat_workers0-hard_hat_workers3999
+val:hard_hat_workers4000-hard_hat_workers4999
+
+必要に応じて使い分けしてください

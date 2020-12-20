@@ -123,8 +123,8 @@ test_data_aug.py
 # temp checkout soln
 data/datasets/
 data/ssd_dataloader.py
-data/coco_helmet
-data/coco_labels_*
+data/coco_helmet/annotations
+data/coco_helmet/images
 
 # pylint
 .pylintrc
