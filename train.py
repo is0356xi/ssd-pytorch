@@ -178,7 +178,11 @@ def train():
             adjust_learning_rate(optimizer, args.gamma, step_index)
 
         # load train data
-        images, targets = next(batch_iterator)
+        try:
+            images, targets = next(batch_iterator)
+        except StopIteration:
+            #例外をキャッチ (StopIterationによってプログラム終了されるのを防ぐ)
+            pass
 
         if args.cuda:
             images = Variable(images.cuda())
