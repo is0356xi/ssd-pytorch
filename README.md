@@ -10,6 +10,7 @@ data/coco_helmet
 │   ├── all.json
 │   ├── train.json
 │   └── val.json
+├── coco_labels_helmet.txt
 └── images
     ├── all
     ├── train
