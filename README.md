@@ -20,5 +20,5 @@ data/coco_helmet
 ## 実行例
 
 ```sh:
-python train.py --cuda False --num_workers 0 --dataset COCO --dataset_root ~/ssd-pytorch/data/coco_helmet
+python train.py --cuda False --num_workers 0 --dataset COCO --dataset_root ~/ssd-pytorch/data/coco_helmet --org_ds True
 ```
