@@ -8,31 +8,15 @@ import torchvision.transforms as transforms
 import cv2
 import numpy as np
 
-COCO_ROOT = osp.join(HOME, 'data/coco')
-# COCO_ROOT = osp.join(HOME, 'ssd.pytorch/data')
+# COCO_ROOT = osp.join(HOME, 'data/coco')
+# LABEL_ROOT = osp.join(HOME, 'ssd-pytorch/data')
+COCO_ROOT = osp.join(HOME, 'ssd-pytorch/data')
 
 IMAGES = 'images'
-# ANNOTATIONS = 'annotations'
-ANNOTATIONS = 'annotations/annotations'
+ANNOTATIONS = 'annotations'
 COCO_API = 'PythonAPI'
-INSTANCES_SET = 'instances_{}.json'
-COCO_CLASSES = ('person', 'bicycle', 'car', 'motorcycle', 'airplane', 'bus',
-                'train', 'truck', 'boat', 'traffic light', 'fire', 'hydrant',
-                'stop sign', 'parking meter', 'bench', 'bird', 'cat', 'dog',
-                'horse', 'sheep', 'cow', 'elephant', 'bear', 'zebra',
-                'giraffe', 'backpack', 'umbrella', 'handbag', 'tie',
-                'suitcase', 'frisbee', 'skis', 'snowboard', 'sports ball',
-                'kite', 'baseball bat', 'baseball glove', 'skateboard',
-                'surfboard', 'tennis racket', 'bottle', 'wine glass', 'cup',
-                'fork', 'knife', 'spoon', 'bowl', 'banana', 'apple',
-                'sandwich', 'orange', 'broccoli', 'carrot', 'hot dog', 'pizza',
-                'donut', 'cake', 'chair', 'couch', 'potted plant', 'bed',
-                'dining table', 'toilet', 'tv', 'laptop', 'mouse', 'remote',
-                'keyboard', 'cell phone', 'microwave oven', 'toaster', 'sink',
-                'refrigerator', 'book', 'clock', 'vase', 'scissors',
-                'teddy bear', 'hair drier', 'toothbrush')
-
-# COCO_CLASSES = ('helmet', 'head', 'person')
+INSTANCES_SET = '{}.json'
+COCO_CLASSES = ('helmet', 'head', 'person')
 
 
 def get_label_map(label_file):
@@ -51,8 +35,7 @@ class COCOAnnotationTransform(object):
     Initilized with a dictionary lookup of classnames to indexes
     """
     def __init__(self):
-        self.label_map = get_label_map(osp.join(COCO_ROOT, 'coco_labels.txt'))
-        # self.label_map = get_label_map(osp.join(COCO_ROOT, 'coco_labels_helmet.txt'))
+        self.label_map = get_label_map(osp.join(COCO_ROOT, 'coco_labels_helmet.txt'))
 
     def __call__(self, target, width, height):
         """
@@ -94,17 +77,15 @@ class COCODetection(data.Dataset):
     # def __init__(self, root, image_set='trainval35k', transform=None,
     #              target_transform=COCOAnnotationTransform(), dataset_name='MS COCO'):
 
-    def __init__(self, root, image_set='train2014', transform=None,
+    def __init__(self, root, image_set='train', transform=None,
                  target_transform=COCOAnnotationTransform(), dataset_name='MS COCO'):
                  
         sys.path.append(osp.join(root, COCO_API))
         from pycocotools.coco import COCO
         self.root = osp.join(root, IMAGES, image_set)
-        # self.root = osp.join(root, "train")
 
         self.coco = COCO(osp.join(root, ANNOTATIONS,
                                   INSTANCES_SET.format(image_set)))                            
-        # self.coco = COCO(osp.join(root, "train.json"))
         
         self.ids = list(self.coco.imgToAnns.keys())
         self.transform = transform
@@ -135,10 +116,10 @@ class COCODetection(data.Dataset):
         """
         img_id = self.ids[index]
         target = self.coco.imgToAnns[img_id]
-        ann_ids = self.coco.getAnnIds(imgIds=img_id)
+        ann_ids = self.coco.getAnnIds(imgIds=[img_id])
 
         target = self.coco.loadAnns(ann_ids)
-        path = osp.join(self.root, self.coco.loadImgs(img_id)[0]['file_name'])
+        path = osp.join(self.root, self.coco.loadImgs([img_id])[0]['file_name'])
 
         assert osp.exists(path), 'Image path does not exist: {}'.format(path)
         img = cv2.imread(osp.join(self.root, path))

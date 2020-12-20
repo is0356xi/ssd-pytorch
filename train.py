@@ -53,6 +53,8 @@ parser.add_argument('--visdom', default=False, type=str2bool,
                     help='Use visdom for loss visualization')
 parser.add_argument('--save_folder', default='weights/',
                     help='Directory for saving checkpoint models')
+parser.add_argument('--org_ds', default=False,
+                    help='Use original datasets')
 args = parser.parse_args()
 
 
@@ -104,6 +106,12 @@ def train():
     if args.visdom:
         import visdom
         viz = visdom.Visdom()
+
+    if args.org_ds:
+        import subprocess
+        line_count = int(subprocess.check_output(['wc', '-l', os.path.join(HOME, 'ssd-pytorch/data/coco_labels_helmet.txt')]).decode().split()[0]) + 1
+        print("num_classes = ", line_count)
+        cfg['num_classes'] = line_count
 
     ssd_net = build_ssd('train', cfg['min_dim'], cfg['num_classes'])
     net = ssd_net
@@ -161,6 +169,7 @@ def train():
                                   num_workers=args.num_workers,
                                   shuffle=True, collate_fn=detection_collate,
                                   pin_memory=True)
+
     # create batch iterator
     batch_iterator = iter(data_loader)
     for iteration in range(args.start_iter, cfg['max_iter']):
