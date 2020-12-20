@@ -86,15 +86,6 @@ def train():
                                 transform=SSDAugmentation(cfg['min_dim'],
                                                           MEANS))
 
-        # オリジナルデータセットを読み込み用
-        # transform = transforms.Compose([
-        # transforms.ToTensor()
-        # ])
-        # train_set = datasets.CocoDetection(root='data/coco_helmet/train',
-        #                                annFile='data/coco_helmet/train.json',
-        #                                transform=transform)
-        # dataset = data.DataLoader(train_set)
-
     elif args.dataset == 'VOC':
         if args.dataset_root == COCO_ROOT:
             parser.error('Must specify dataset if specifying dataset_root')
@@ -109,9 +100,10 @@ def train():
 
     if args.org_ds:
         import subprocess
-        line_count = int(subprocess.check_output(['wc', '-l', os.path.join(HOME, 'ssd-pytorch/data/coco_labels_helmet.txt')]).decode().split()[0]) + 1
+        line_count = int(subprocess.check_output(['wc', '-l', os.path.join(HOME, 'ssd-pytorch/data/coco_helmet/coco_labels_helmet.txt')]).decode().split()[0]) + 1
         print("num_classes = ", line_count)
-        cfg['num_classes'] = line_count
+        # num classes + background
+        cfg['num_classes'] = line_count + 1
 
     ssd_net = build_ssd('train', cfg['min_dim'], cfg['num_classes'])
     net = ssd_net
