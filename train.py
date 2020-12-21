@@ -223,8 +223,7 @@ def train():
                        repr(iteration) + '.pth')
 
             # GoogleDrive用
-            torch.save(ssd_net.state_dict(), args.save_folder +　'SSD_COCO_'
-                       repr(iteration) + '.pth')
+            torch.save(ssd_net.state_dict(), args.save_folder +　'SSD_COCO_' + repr(iteration) + '.pth')
 
     torch.save(ssd_net.state_dict(),
                args.save_folder + '' + args.dataset + '.pth')
