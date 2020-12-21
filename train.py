@@ -222,6 +222,10 @@ def train():
             torch.save(ssd_net.state_dict(), 'weights/ssd300_COCO_' +
                        repr(iteration) + '.pth')
 
+            # GoogleDrive用
+            torch.save(ssd_net.state_dict(), args.save_folder +　'SSD_COCO_'
+                       repr(iteration) + '.pth')
+
     torch.save(ssd_net.state_dict(),
                args.save_folder + '' + args.dataset + '.pth')
 
