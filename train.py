@@ -116,11 +116,9 @@ def train():
         print('Resuming training, loading {}...'.format(args.resume))
         ssd_net.load_weights(args.resume)
     else:
-        # vgg_weights = torch.load(args.save_folder + args.basenet)
-        # print('Loading base network...')
-        # ssd_net.vgg.load_state_dict(vgg_weights)
-
-        pass
+        weights = torch.load(args.basenet)
+        print('Loading base network...')
+        ssd_net.vgg.load_state_dict(weights)
 
     if args.cuda:
         net = net.cuda()
@@ -223,6 +221,7 @@ def train():
             print('Saving state, iter:', iteration)
             torch.save(ssd_net.state_dict(), 'weights/ssd300_COCO_' +
                        repr(iteration) + '.pth')
+
     torch.save(ssd_net.state_dict(),
                args.save_folder + '' + args.dataset + '.pth')
 
